@@ -1,3 +1,3 @@
 # python-matjip
 터미널 실행명령어 
-unicorn main:app --reload
+uvicorn main:app --reload
