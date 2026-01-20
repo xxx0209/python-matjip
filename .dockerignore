@@ -3,5 +3,5 @@ __pycache__/
 *.pyo
 *.pyd
 .env
-.idea/
-.vscode/
+.git/
+tests/
