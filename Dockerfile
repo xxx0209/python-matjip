@@ -1,6 +1,9 @@
 FROM python:3.11-slim
 WORKDIR /app
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+
+# CI에서 설치한 패키지를 그대로 사용하려면, 패키지를 포함한 폴더를 복사
+# 예: site-packages를 포함한 wheel 또는 install 폴더를 COPY
 COPY . .
-CMD ["uvicorn","main:app","--host","0.0.0.0","--port","8000"]
+
+EXPOSE 8000
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

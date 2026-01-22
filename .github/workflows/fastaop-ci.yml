@@ -2,7 +2,7 @@ name: FastAPI Docker Build & Push
 on:
   push:
     branches:
-      - main
+      - prod
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
