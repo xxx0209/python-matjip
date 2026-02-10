@@ -14,6 +14,7 @@ async def recommend(
     user=Depends(get_current_user_optional)
 ):
     print("🔥 USER:", user)
+    print("🎯 Preferred Categories:", data.preferredCategories)
 
     # 1️⃣ 질문 분석
     analysis = analyze_question(data.question)
@@ -24,13 +25,15 @@ async def recommend(
         analysis["food"] or ""
     )
 
+    preferred_categories = data.preferredCategories or []
+
     # 3️⃣ 점수 계산
     for p in places:
-        p["score"] = await calculate_place_score(p, analysis)
-
-        # 🔥 로그인 사용자 개인화 확장 위치
-        if user:
-            p["score"] += 1.5  # 예시 가중치
+        p["score"] = await calculate_place_score(
+            place=p,
+            analysis=analysis,
+            preferred_categories=preferred_categories
+        )
 
     # 4️⃣ 정렬
     sorted_places = sorted(places, key=lambda x: x["score"], reverse=True)

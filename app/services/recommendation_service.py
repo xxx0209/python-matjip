@@ -1,24 +1,24 @@
 import random
-from app.services.tag_service import infer_place_tags
-from app.services.user_service import get_user_preferences
 
-async def calculate_place_score(place: dict, analysis: dict) -> float:
+
+async def calculate_place_score(
+    place: dict,
+    analysis: dict,
+    preferred_categories: list[str]
+) -> float:
     score = 0
-    tags = infer_place_tags(place)
 
+    # 1️⃣ 질문 기반 점수
     if analysis.get("food") and analysis["food"] in place.get("category", ""):
         score += 5
 
-    if analysis.get("mood") == "분위기 좋은":
-        if "감성" in tags:
-            score += 4
-        if "데이트" in tags:
-            score += 3
+    # 2️⃣ 🔥 사용자 선호 카테고리 (상위 3개)
+    for idx, category in enumerate(preferred_categories):
+        if category in place.get("category", ""):
+            score += (3 - idx) * 2
+            # 1순위 6점 / 2순위 4점 / 3순위 2점
 
-    if analysis.get("user_id"):
-        prefs = await get_user_preferences(analysis["user_id"])
-        if analysis.get("food") in prefs.get("likedFoods", []):
-            score += 2
-
+    # 3️⃣ 랜덤성 (동점 방지)
     score += random.uniform(0, 1)
+
     return round(score, 2)

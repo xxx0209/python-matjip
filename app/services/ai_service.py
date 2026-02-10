@@ -25,26 +25,6 @@ def analyze_question(question: str) -> dict:
     return {"location": location, "food": food, "mood": mood}
 
 
-def generate_recommend_comment(question: str, places: list):
-    if not places:
-        return None
-
-    try:
-        summary = ", ".join([p["name"] for p in places[:2]])
-        prompt = f"사용자 질문: {question}\n추천 장소: {summary}\n한 문장으로 추천해줘."
-
-        res = client.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[{"role": "user", "content": prompt}],
-        )
-
-        return res.choices[0].message.content.strip()
-
-    except Exception as e:
-        print("LLM 실패:", e)
-        return None
-
-
 def generate_rule_based_comment(question: str, places: list):
     if not places:
         return "조건에 맞는 맛집을 찾지 못했어요 😢"
